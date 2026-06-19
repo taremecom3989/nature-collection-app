@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>しぜんコレクション</title>
+  <style>
+    :root {
+      --green: #3aa76d;
+      --deep-green: #207a4b;
+      --yellow: #ffe36e;
+      --orange: #ff9f43;
+      --pink: #ff7eb6;
+      --blue: #6ecbff;
+      --cream: #fff8df;
+      --card: #ffffff;
+      --text: #254033;
+      --shadow: 0 8px 18px rgba(35, 90, 55, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 227, 110, 0.75), transparent 28rem),
+        linear-gradient(180deg, #dff8e8 0%, var(--cream) 44%, #e8f7ff 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: max(22px, env(safe-area-inset-top)) 18px 18px;
+      text-align: center;
+      background: linear-gradient(135deg, #59c878, #8adf6d 55%, #ffd76d);
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 { margin: 0; font-size: 2.1rem; letter-spacing: 0.03em; }
+    h2 { margin: 0 0 12px; font-size: 1.35rem; }
+    h3 { margin: 14px 0 8px; font-size: 1.05rem; }
+    p { line-height: 1.65; }
+
+    .tagline {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 16px 14px 34px;
+    }
+
+    section {
+      margin: 16px 0;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 3px solid rgba(58, 167, 109, 0.18);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .helper, .privacy-note {
+      background: #fff6bf;
+      border-color: #ffd95d;
+      border-radius: 18px;
+      padding: 12px 14px;
+    }
+
+    .privacy-note { background: #e7f5ff; border-color: #92d7ff; font-size: 0.92rem; }
+
+    label {
+      display: block;
+      margin-top: 13px;
+      font-weight: 800;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      font: inherit;
+      font-size: 1rem;
+      border-radius: 16px;
+    }
+
+    input, select, textarea {
+      margin-top: 6px;
+      padding: 12px;
+      border: 2px solid #b8e4c9;
+      background: #fff;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    button {
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border: 0;
+      color: #173526;
+      background: var(--yellow);
+      font-weight: 900;
+      box-shadow: 0 4px 0 #e0bd36;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:active { transform: translateY(2px); box-shadow: 0 2px 0 #e0bd36; }
+    .primary { background: #68db83; box-shadow: 0 4px 0 #33a95a; }
+    .danger { background: #ff8f8f; box-shadow: 0 4px 0 #d95d5d; }
+    .secondary { background: #9fe0ff; box-shadow: 0 4px 0 #61b6dc; }
+
+    .row { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .preview {
+      display: none;
+      width: 100%;
+      max-height: 270px;
+      object-fit: cover;
+      margin-top: 10px;
+      border-radius: 18px;
+      border: 4px solid #fff;
+      box-shadow: var(--shadow);
+      background: #eef7ee;
+    }
+
+    .message {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 16px;
+      background: #e9ffe9;
+      border: 2px solid #8ddd8d;
+      font-weight: 800;
+    }
+
+    .message.error { background: #fff0f0; border-color: #ff9e9e; }
+
+    .stats-grid, .filters { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    .stat-box {
+      padding: 12px;
+      background: #f4ffef;
+      border-radius: 18px;
+      border: 2px dashed #8bcc75;
+    }
+
+    .cards { display: grid; grid-template-columns: 1fr; gap: 14px; }
+    .card {
+      overflow: hidden;
+      background: var(--card);
+      border-radius: 22px;
+      border: 3px solid #c9efc4;
+      box-shadow: var(--shadow);
+    }
+
+    .card img { width: 100%; height: 180px; object-fit: cover; background: #f1f1f1; }
+    .card-body { padding: 14px; }
+    .pill {
+      display: inline-block;
+      margin: 4px 6px 4px 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eaf8d8;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+    .details { display: none; margin-top: 8px; }
+    .details.open { display: block; }
+    .empty { text-align: center; padding: 24px; background: #fffbe1; border-radius: 18px; }
+    a { color: #0868a8; font-weight: 800; }
+
+    @media (min-width: 720px) {
+      .row, .stats-grid, .filters { grid-template-columns: repeat(2, 1fr); }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌱 しぜんコレクション 🐞</h1>
+    <div class="tagline">今日の発見をふやそう！</div>
+  </header>
+
+  <main>
+    <section class="privacy-note">
+      <strong>あんしんメモ：</strong>写真と位置情報はこのブラウザの中にだけ保存されます。知らない人には見せないようにしましょう。<br>
+      このアプリはデータをサーバーに送りません。
+    </section>
+
+    <section>
+      <h2>📸 発見を記録しよう</h2>
+      <div class="helper">
+        <p>・名前がわからないときは「なぞの虫」「きれいな花」でもOK！</p>
+        <p>・あとで図鑑や大人と一緒に調べてみよう！</p>
+        <p>・AI判定機能は今後追加予定です。今は名前や特徴を自分で入力してね。</p>
+      </div>
+
+      <form id="collectionForm">
+        <label for="photoInput">写真（カメラで撮る / アップロード）</label>
+        <input id="photoInput" type="file" accept="image/*" capture="environment">
+        <img id="photoPreview" class="preview" alt="選んだ写真のプレビュー">
+
+        <div class="row">
+          <label>名前
+            <input id="nameInput" type="text" placeholder="例：なぞの虫、タンポポ">
+          </label>
+          <label>カテゴリ
+            <select id="categoryInput"></select>
+          </label>
+        </div>
+
+        <label>見つけた場所メモ
+          <input id="placeInput" type="text" placeholder="例：公園の木の下、家の庭">
+        </label>
+
+        <label>特徴メモ
+          <textarea id="featuresInput" placeholder="色、形、大きさ、動きなどを書こう"></textarea>
+        </label>
+
+        <label>発見レベル
+          <select id="rarityInput"></select>
+        </label>
+
+        <label>子どもの感想
+          <textarea id="commentInput" placeholder="見つけたときの気持ちを書こう"></textarea>
+        </label>
+
+        <button id="gpsButton" class="secondary" type="button">📍 いまの場所を記録する</button>
+        <p id="gpsText">GPS：まだ記録していません</p>
+
+        <button class="primary" type="submit">✨ コレクションに追加</button>
+      </form>
+      <div id="message" class="message"></div>
+    </section>
+
+    <section>
+      <h2>🏆 しぜんレポート</h2>
+      <div class="stats-grid">
+        <div class="stat-box" id="totalStat">合計：0こ</div>
+        <div class="stat-box" id="latestStat">最新：まだありません</div>
+        <div class="stat-box" id="categoryStat">カテゴリ：まだありません</div>
+        <div class="stat-box" id="achievementStat">まずは1つ見つけよう！</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔎 さがす</h2>
+      <div class="filters">
+        <label>カテゴリでしぼる
+          <select id="categoryFilter"></select>
+        </label>
+        <label>発見レベルでしぼる
+          <select id="rarityFilter"></select>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2>📚 コレクション</h2>
+      <div id="collectionList" class="cards"></div>
+    </section>
+
+    <section>
+      <h2>🧰 データ</h2>
+      <button id="exportButton" class="secondary" type="button">JSONでエクスポート</button>
+      <button id="sampleButton" type="button">サンプルを追加</button>
+      <button id="resetButton" class="danger" type="button">ぜんぶ消す</button>
+      <p>エクスポートには写真データも含まれるため、ファイルが大きくなることがあります。</p>
+    </section>
+  </main>
+
+  <script>
+    // App state: discoveries array, compressed selected photo, and current GPS values.
+    const STORAGE_KEY = 'shizenCollectionItems';
+    const categories = ['虫', '動物', '鳥', '花', '木', '草', 'きのこ', 'その他'];
+    const rarities = ['よく見つかる', 'ちょっとレア', 'すごくレア', '伝説級'];
+    const icons = { '虫': '🐞', '動物': '🐿️', '鳥': '🐦', '花': '🌸', '木': '🌳', '草': '🌿', 'きのこ': '🍄', 'その他': '✨' };
+    let items = [];
+    let selectedPhoto = '';
+    let currentLatitude = '';
+    let currentLongitude = '';
+
+    const $ = (id) => document.getElementById(id);
+
+    // localStorage save/load: all data stays only in this browser.
+    function loadItems() {
+      try { items = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch { items = []; }
+    }
+
+    function saveItems() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function fillSelect(select, options, allLabel) {
+      select.innerHTML = allLabel ? `<option value="">${allLabel}</option>` : '';
+      options.forEach((value) => select.insertAdjacentHTML('beforeend', `<option value="${value}">${value}</option>`));
+    }
+
+    function showMessage(text, isError = false) {
+      const box = $('message');
+      box.textContent = text;
+      box.className = `message${isError ? ' error' : ''}`;
+      box.style.display = 'block';
+      window.setTimeout(() => { box.style.display = 'none'; }, 5200);
+    }
+
+    // Image preview and compression: resize with canvas before localStorage save.
+    $('photoInput').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showMessage('画像ファイルを選んでね。', true);
+        return;
+      }
+      try {
+        selectedPhoto = await resizeImage(file, 1000, 0.72);
+        if (selectedPhoto.length > 1500000) {
+          selectedPhoto = '';
+          $('photoInput').value = '';
+          $('photoPreview').style.display = 'none';
+          showMessage('写真が少し大きすぎました。小さめの写真でもう一度ためしてね。', true);
+          return;
+        }
+        $('photoPreview').src = selectedPhoto;
+        $('photoPreview').style.display = 'block';
+      } catch (error) {
+        showMessage('写真を読みこめませんでした。別の写真でためしてね。', true);
+      }
+    });
+
+    function resizeImage(file, maxSize, quality) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = () => {
+          const image = new Image();
+          image.onerror = reject;
+          image.onload = () => {
+            const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(image.width * scale);
+            canvas.height = Math.round(image.height * scale);
+            canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // GPS handling: ask iPhone Safari/browser for permission when the button is tapped.
+    $('gpsButton').addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        $('gpsText').textContent = '位置情報が使えませんでした。設定を確認するか、場所メモに書いてね。';
+        return;
+      }
+      $('gpsText').textContent = 'GPSをさがしています…';
+      navigator.geolocation.getCurrentPosition((position) => {
+        currentLatitude = position.coords.latitude.toFixed(6);
+        currentLongitude = position.coords.longitude.toFixed(6);
+        $('gpsText').textContent = `GPSを記録したよ：${currentLatitude}, ${currentLongitude}`;
+      }, () => {
+        currentLatitude = '';
+        currentLongitude = '';
+        $('gpsText').textContent = '位置情報が使えませんでした。設定を確認するか、場所メモに書いてね。';
+      }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+    });
+
+    // Form validation and collection saving.
+    $('collectionForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = $('nameInput').value.trim();
+      if (!selectedPhoto) return showMessage('まず写真を選んでね。', true);
+      if (!name) return showMessage('名前を書いてね。わからないときは「なぞの生きもの」でもOK！', true);
+
+      const item = {
+        id: Date.now().toString(), photo: selectedPhoto, name,
+        category: $('categoryInput').value, placeMemo: $('placeInput').value.trim(),
+        features: $('featuresInput').value.trim(), childComment: $('commentInput').value.trim(),
+        rarity: $('rarityInput').value, latitude: currentLatitude, longitude: currentLongitude,
+        dateTime: new Date().toLocaleString('ja-JP')
+      };
+
+      try {
+        items.unshift(item);
+        saveItems();
+      } catch (error) {
+        items.shift();
+        return showMessage('保存できませんでした。写真が多いかもしれません。エクスポートしてから古い写真を消してみてね。', true);
+      }
+      event.target.reset();
+      selectedPhoto = ''; currentLatitude = ''; currentLongitude = '';
+      $('photoPreview').style.display = 'none';
+      $('gpsText').textContent = 'GPS：まだ記録していません';
+      showMessage('コレクションに追加したよ！すごい発見だね！');
+      renderAll();
+    });
+
+    // Collection rendering with compact detail toggle for mobile.
+    function renderCollection() {
+      const category = $('categoryFilter').value;
+      const rarity = $('rarityFilter').value;
+      const filtered = items.filter((item) => (!category || item.category === category) && (!rarity || item.rarity === rarity));
+      const list = $('collectionList');
+      if (!filtered.length) {
+        list.innerHTML = '<div class="empty">まだ表示する発見がありません。写真を撮って追加してみよう！</div>';
+        return;
+      }
+      list.innerHTML = filtered.map((item) => {
+        const mapLink = item.latitude && item.longitude ? `<p>📍 ${item.latitude}, ${item.longitude}<br><a href="https://www.google.com/maps?q=${item.latitude},${item.longitude}" target="_blank" rel="noopener">Google Mapsで見る</a></p>` : '<p>📍 GPSなし</p>';
+        return `<article class="card">
+          <img src="${item.photo}" alt="${escapeHtml(item.name)}の写真">
+          <div class="card-body">
+            <h3>${icons[item.category] || '✨'} ${escapeHtml(item.name)}</h3>
+            <span class="pill">${escapeHtml(item.category)}</span><span class="pill">${escapeHtml(item.rarity)}</span>
+            <p>🗓️ ${escapeHtml(item.dateTime)}</p>
+            <button type="button" onclick="toggleDetails('${item.id}')">くわしく見る / 閉じる</button>
+            <div class="details" id="details-${item.id}">
+              <p><strong>場所メモ：</strong>${escapeHtml(item.placeMemo || 'なし')}</p>
+              <p><strong>特徴：</strong>${escapeHtml(item.features || 'なし')}</p>
+              <p><strong>感想：</strong>${escapeHtml(item.childComment || 'なし')}</p>
+              ${mapLink}
+              <button class="danger" type="button" onclick="deleteItem('${item.id}')">この発見を消す</button>
+            </div>
+          </div>
+        </article>`;
+      }).join('');
+    }
+
+    function toggleDetails(id) { $(`details-${id}`).classList.toggle('open'); }
+
+    function deleteItem(id) {
+      if (!confirm('この発見を消しますか？')) return;
+      items = items.filter((item) => item.id !== id);
+      saveItems();
+      renderAll();
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+    }
+
+    // Filters and stats.
+    $('categoryFilter').addEventListener('change', renderCollection);
+    $('rarityFilter').addEventListener('change', renderCollection);
+
+    function renderStats() {
+      $('totalStat').textContent = `合計：${items.length}こ`;
+      $('latestStat').textContent = items[0] ? `最新：${items[0].name}（${items[0].dateTime}）` : '最新：まだありません';
+      const counts = categories.map((cat) => `${icons[cat]}${cat}:${items.filter((item) => item.category === cat).length}`).join(' / ');
+      $('categoryStat').textContent = counts;
+      $('achievementStat').textContent = getAchievement(items.length);
+    }
+
+    function getAchievement(count) {
+      if (count >= 20) return '🏅 しぜんマスター！';
+      if (count >= 10) return '🔬 小さな博士！';
+      if (count >= 5) return '🧭 しぜんたんけん隊！';
+      if (count >= 1) return '🌟 はじめての発見！';
+      return 'まずは1つ見つけよう！';
+    }
+
+    // Export/reset/sample data tools.
+    $('exportButton').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'shizen-collection.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    $('resetButton').addEventListener('click', () => {
+      if (!confirm('ぜんぶのコレクションを消しますか？写真も消えます。')) return;
+      items = [];
+      saveItems();
+      renderAll();
+    });
+
+    $('sampleButton').addEventListener('click', () => {
+      const svgPhoto = (emoji, color) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='600' height='420'><rect width='100%' height='100%' fill='${color}'/><text x='50%' y='54%' font-size='130' text-anchor='middle'>${emoji}</text></svg>`)}`;
+      items.unshift(
+        { id: Date.now() + '-1', photo: svgPhoto('🐞', '#fff3b0'), name: 'てんとう虫', category: '虫', placeMemo: '公園の葉っぱ', features: '赤くて黒い点がある', childComment: '小さくてかわいい！', rarity: 'よく見つかる', latitude: '', longitude: '', dateTime: new Date().toLocaleString('ja-JP') },
+        { id: Date.now() + '-2', photo: svgPhoto('🌸', '#ffd6e8'), name: 'きれいな花', category: '花', placeMemo: '道ばた', features: 'ピンク色でいいにおい', childComment: 'また見たい', rarity: 'ちょっとレア', latitude: '', longitude: '', dateTime: new Date().toLocaleString('ja-JP') },
+        { id: Date.now() + '-3', photo: svgPhoto('🍄', '#d8f5d0'), name: 'なぞのきのこ', category: 'きのこ', placeMemo: '木の近く', features: '丸いかさ。さわらずに見た', childComment: 'ふしぎだった', rarity: 'すごくレア', latitude: '', longitude: '', dateTime: new Date().toLocaleString('ja-JP') }
+      );
+      try { saveItems(); showMessage('サンプルを追加したよ！'); renderAll(); }
+      catch { showMessage('サンプルを保存できませんでした。', true); }
+    });
+
+    function renderAll() { renderStats(); renderCollection(); }
+
+    fillSelect($('categoryInput'), categories);
+    fillSelect($('rarityInput'), rarities);
+    fillSelect($('categoryFilter'), categories, 'すべて');
+    fillSelect($('rarityFilter'), rarities, 'すべて');
+    loadItems();
+    renderAll();
+  </script>
+</body>
+</html>
